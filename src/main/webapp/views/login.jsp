@@ -21,7 +21,7 @@
     </div>
     <% } %>
 
-    <form action="UserServlet" method="post">
+    <form action="login" method="post">
         <input type="hidden" name="action" value="login">
 
         <div class="mb-3">

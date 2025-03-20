@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/UserServlet")
+@WebServlet("/UserServlet/*")
 public class UserServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private UserDao userDao;
@@ -23,12 +23,14 @@ public class UserServlet extends HttpServlet {
         userDao = new UserDao();
     }
 
-    // Gérer les requêtes GET
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
+        String action = request.getPathInfo();
 
         switch (action) {
+            case "login":
+                login(request, response);
+                break;
             case "logout":
                 logout(request, response);
                 break;
@@ -44,7 +46,6 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    // Gérer les requêtes POST
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -65,7 +66,6 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    // Méthode pour gérer la connexion de l'utilisateur
     private void login(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -81,7 +81,6 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    // Méthode pour gérer la déconnexion de l'utilisateur
     private void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession(false);
         if (session != null) {
@@ -90,7 +89,6 @@ public class UserServlet extends HttpServlet {
         response.sendRedirect("login.jsp");
     }
 
-    // Ajouter un administrateur
     private void addAdmin(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -105,7 +103,6 @@ public class UserServlet extends HttpServlet {
         response.sendRedirect("UserServlet?action=list");
     }
 
-    // Modifier un administrateur
     private void updateAdmin(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         int id = Integer.parseInt(request.getParameter("id"));
         String email = request.getParameter("email");
@@ -121,14 +118,12 @@ public class UserServlet extends HttpServlet {
         response.sendRedirect("UserServlet?action=list");
     }
 
-    // Supprimer un administrateur
     private void deleteAdmin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         userDao.deleteAdmin(id);
         response.sendRedirect("UserServlet?action=list");
     }
 
-    // Lister tous les administrateurs
     private void listAdmins(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<User> admins = userDao.getAllAdmins();
         request.setAttribute("admins", admins);
