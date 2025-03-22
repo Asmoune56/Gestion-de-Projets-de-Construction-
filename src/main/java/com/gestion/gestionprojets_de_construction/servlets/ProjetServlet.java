@@ -12,9 +12,9 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-
-@WebServlet("/projet/*")
+@WebServlet("/projects/*")
 public class ProjetServlet extends HttpServlet {
     private final ProjetDao projetDao = new ProjetDao();
 
@@ -26,13 +26,11 @@ public class ProjetServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getPathInfo();
-        System.out.println(action);
-
-        // Handle actions based on the path info
         switch (action) {
             case "/new":
                 createProjet(req, resp);
                 break;
+
             case "/new-form":
                 addProjetForm(req, resp);
                 break;
@@ -40,25 +38,16 @@ public class ProjetServlet extends HttpServlet {
                 updateProjet(req, resp);
                 break;
             case "/edit-form":
-                try {
-                    updateProjetForm(req, resp);
-                } catch (SQLException e) {
-                    throw new ServletException("Error while fetching project data for update", e);
-                }
+                updateProjetForm(req, resp);
                 break;
             case "/delete":
                 deleteProjet(req, resp);
                 break;
             case "/list":
-                try {
-                    listProjets(req, resp);
-                } catch (SQLException e) {
-                    throw new ServletException("Error while fetching projects list", e);
-                }
+                listProjets(req, resp);
                 break;
             default:
-                System.out.println("Unknown action: " + action);
-                resp.sendRedirect("/projet/list");
+                resp.sendRedirect("/projects/list");
         }
     }
 
@@ -78,20 +67,20 @@ public class ProjetServlet extends HttpServlet {
         } catch (Exception e) {
             session.setAttribute("error", e.getMessage());
             session.setAttribute("messageType", "danger");
-            e.printStackTrace(); // Log the error for debugging
         }
 
-        // Redirect to list page after creation
-        resp.sendRedirect("/projet/list");
+        resp.sendRedirect(req.getContextPath() + "/projects/list");
     }
 
     private void addProjetForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/views/projets/ajouter_form.jsp").forward(req, resp);
+        req.getRequestDispatcher("/views/projets/add_new-form.jsp").forward(req, resp);
     }
+
+
 
     private void updateProjet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int id = Integer.parseInt(req.getParameter("id"));
-        String nom = req.getParameter("nom");
+        String nome = req.getParameter("nom");
         String description = req.getParameter("description");
         Date dateDebut = Date.valueOf(req.getParameter("dateDebut"));
         Date dateFin = Date.valueOf(req.getParameter("dateFin"));
@@ -101,7 +90,7 @@ public class ProjetServlet extends HttpServlet {
         try {
             Projet projet = projetDao.getProjetById(id);
             if (projet != null) {
-                projet.setNom(nom);
+                projet.setNom(nome);
                 projet.setDescription(description);
                 projet.setDateDebut(dateDebut);
                 projet.setDateFin(dateFin);
@@ -116,39 +105,66 @@ public class ProjetServlet extends HttpServlet {
         } catch (Exception e) {
             session.setAttribute("error", e.getMessage());
             session.setAttribute("messageType", "danger");
-            e.printStackTrace(); // Log the error for debugging
         }
 
-        resp.sendRedirect("/projet/list");
+        resp.sendRedirect(req.getContextPath() + "/projects/list");
     }
 
-    private void updateProjetForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, SQLException {
-        int id = Integer.parseInt(req.getParameter("id"));
-        Projet projet = projetDao.getProjetById(id);
-        req.setAttribute("projet", projet);
-        req.getRequestDispatcher("/WEB-INF/views/projets/modifierProjet.jsp").forward(req, resp);
-    }
+    private void updateProjetForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String idParam = req.getParameter("id");
 
-    private void deleteProjet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
-        HttpSession session = req.getSession();
+        // Vérifier si l'ID est vide ou null
+        if (idParam == null || idParam.isEmpty()) {
+            req.setAttribute("error", "ID du projet manquant !");
+            req.getRequestDispatcher("/views/projets/projects.jsp").forward(req, resp);
+            return;
+        }
 
         try {
-            projetDao.deleteProjet(id);
-            session.setAttribute("message", "Projet supprimé avec succès !");
-            session.setAttribute("messageType", "success");
-        } catch (Exception e) {
-            session.setAttribute("error", e.getMessage());
-            session.setAttribute("messageType", "danger");
-            e.printStackTrace(); // Log the error for debugging
+            int id = Integer.parseInt(idParam);
+            Projet projet = projetDao.getProjetById(id);
+            if (projet == null) {
+                req.setAttribute("error", "Projet introuvable !");
+                req.getRequestDispatcher("/views/projets/projects.jsp").forward(req, resp);
+            } else {
+                req.setAttribute("projet", projet);
+                req.getRequestDispatcher("/views/projets/modifierProjet.jsp").forward(req, resp);
+            }
+        } catch (NumberFormatException e) {
+            req.setAttribute("error", "ID du projet invalide !");
+            req.getRequestDispatcher("/views/projets/projects.jsp").forward(req, resp);
         }
-
-        resp.sendRedirect("/projet/list");
     }
 
-    private void listProjets(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, SQLException {
+
+    private void deleteProjet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String idParam = req.getParameter("id");
+
+        // Vérifier si l'ID est vide ou null
+        if (idParam == null || idParam.isEmpty()) {
+            req.getSession().setAttribute("error", "ID du projet manquant !");
+            resp.sendRedirect(req.getContextPath() + "/projects/list");
+            return;
+        }
+
+        try {
+            int id = Integer.parseInt(idParam);
+            projetDao.deleteProjet(id);
+            req.getSession().setAttribute("message", "Projet supprimé avec succès !");
+            req.getSession().setAttribute("messageType", "success");
+        } catch (NumberFormatException e) {
+            req.getSession().setAttribute("error", "ID du projet invalide !");
+        } catch (Exception e) {
+            req.getSession().setAttribute("error", e.getMessage());
+        }
+
+        resp.sendRedirect(req.getContextPath() + "/projects/list");
+    }
+
+
+    private void listProjets(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Projet> projets = projetDao.getProjets();
-        req.setAttribute("projets", projets);
-        req.getRequestDispatcher("/WEB-INF/views/projets/listeProjet.jsp").forward(req, resp);
+        req.setAttribute("projects", projets);
+        req.getRequestDispatcher("/views/projets/projects.jsp").forward(req, resp);
     }
 }

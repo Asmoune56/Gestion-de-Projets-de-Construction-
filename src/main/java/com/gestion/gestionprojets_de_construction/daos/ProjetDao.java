@@ -19,7 +19,7 @@ public class ProjetDao {
  private static final String DELETE_PROJET = "DELETE FROM projets WHERE id = ?";
  private static final String UPDATE_PROJET = "UPDATE projets SET nom = ?, description = ?, dateDebut = ?, dateFin = ?, budget = ? WHERE id = ?";
 
- // Connexion à la base de données
+ // Connexion
  protected Connection getConnection() {
   Connection con = null;
   try {
@@ -49,7 +49,7 @@ public class ProjetDao {
   }
  }
 
- // Récupérer tous les projets
+ // les projets
  public List<Projet> getProjets() {
   List<Projet> projets = new ArrayList<>();
   try (Connection con = getConnection();
@@ -72,7 +72,8 @@ public class ProjetDao {
   return projets;
  }
 
- // Récupérer un projet par son ID
+
+ // projet par ID
  public Projet getProjetById(int id) {
   Projet projet = null;
   try (Connection con = getConnection();

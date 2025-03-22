@@ -74,7 +74,7 @@
 
 <div class="container">
     <h1>Add New Project</h1>
-    <form action="addProject" method="POST">
+    <form action="projects/new" method="POST">
         <label for="name">Project Name:</label>
         <input type="text" id="name" name="name" required>
 

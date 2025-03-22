@@ -19,7 +19,6 @@ public class FournisseurDao {
     private static final String UPDATE_FOURNISSEUR = "UPDATE fournisseurs SET nom = ?, email = ?, telephone = ?, adresse = ? WHERE id = ?";
     private static final String DELETE_FOURNISSEUR = "DELETE FROM fournisseurs WHERE id = ?";
 
-    // Connexion à la base de données
     protected Connection getConnection() {
         Connection con = null;
         try {
@@ -49,7 +48,7 @@ public class FournisseurDao {
         }
     }
 
-    // Récupérer la liste des fournisseurs
+    //  liste des fournisseurs
     public List<Fournisseur> selectAllFournisseurs() {
         List<Fournisseur> fournisseurs = new ArrayList<>();
         try (Connection con = getConnection();

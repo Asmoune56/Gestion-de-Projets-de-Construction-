@@ -12,6 +12,9 @@ public class Tache {
     public Tache() {
     }
 
+    public Tache(String description, Date dateDebut, Date dateFin) {
+    }
+
     public Tache(String description, Date dateDebut, Date dateFin, int projetId) {
         this.description = description;
         this.dateDebut = dateDebut;

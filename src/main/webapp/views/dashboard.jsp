@@ -117,10 +117,10 @@
 <div class="container">
     <div class="sidebar">
         <a href="#">🏠 Tableau de Bord</a>
-        <a href="projects.jsp">📁 Projets</a>
-        <a href="tache.jsp">✅ Tâches</a>
-        <a href="resources.jsp">🛠️ Ressources</a>
-        <a href="fournisseurs.jsp">🚚 Fournisseurs</a>
+        <a href="projects/list">📁 Projets</a>
+        <a href="tache/list">✅ Tâches</a>
+        <a href="Resources/list">🛠️ Ressources</a>
+        <a href="fournisseur/list">🚚 Fournisseurs</a>
     </div>
 
     <div class="main-content">

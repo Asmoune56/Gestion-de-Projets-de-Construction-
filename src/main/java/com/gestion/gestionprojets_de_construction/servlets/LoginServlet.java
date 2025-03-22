@@ -33,18 +33,26 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        User user = userDao.getUser(email ,password);
+        try {
 
-        if (user != null && BCrypt.checkpw(password, user.getPassword())) {
-            HttpSession session = request.getSession();
-            session.setAttribute("user", user);
+            User user = userDao.getUserByEmail(email);
+            if (user != null && BCrypt.checkpw(password, user.getPassword())) {
+                HttpSession session = request.getSession();
+                session.setAttribute("user", user);
+
+                request.getRequestDispatcher("views/dashboard.jsp").forward(request, response);
+
+                System.out.println("user logged in");
 
 
-            // Redirige selon le rôle
-        } else {
-            request.setAttribute("errorMessage", "Email ou mot de passe incorrect !");
-            request.getRequestDispatcher("views/login.jsp").forward(request, response);
+            } else {
+                request.setAttribute("errorMessage", "Email ou mot de passe incorrect !");
+                request.getRequestDispatcher("views/login.jsp").forward(request, response);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+
     }
 
     private String getRedirectPage(String role) {

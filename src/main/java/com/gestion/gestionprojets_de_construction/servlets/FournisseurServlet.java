@@ -53,7 +53,7 @@ public class FournisseurServlet extends HttpServlet {
     private void listFournisseurs(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Fournisseur> fournisseurs = fournisseurDao.selectAllFournisseurs();
         request.setAttribute("fournisseurs", fournisseurs);
-        request.getRequestDispatcher("/WEB-INF/views/fournisseurs/list.jsp").forward(request, response);
+        request.getRequestDispatcher("/views/fournisseurs/list.jsp").forward(request, response);
     }
 
     private void createFournisseur(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

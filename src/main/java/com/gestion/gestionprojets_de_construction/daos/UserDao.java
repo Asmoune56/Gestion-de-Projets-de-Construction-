@@ -45,7 +45,39 @@ public class UserDao {
         }
     }
 
-    // Récupérer la liste de tous les administrateurs
+    public User getUserByEmail(String email) throws SQLException, ClassNotFoundException {
+        User user = new User();
+        try(Connection con = getConnection();
+         PreparedStatement ps = con.prepareStatement("select * from admin where admin.email = ?")){
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+
+                int id = rs.getInt("id");
+                String email1 = rs.getString("email");
+                String password = rs.getString("mot_de_passe");
+                user.setEmail(email1);
+                user.setPassword(password);
+                user.setId(id);
+
+            }
+        }
+
+        return user;
+
+    }
+    public void insertUser(User user) {
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement(INSERT_ADMIN)) {
+            ps.setString(1, user.getEmail());
+            ps.setString(2, user.getPassword());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors de l'ajout de l'administrateur", e);
+        }
+    }
+
+    //  liste  administrateurs
     public List<User> getAllAdmins() {
         List<User> listAdmins = new ArrayList<>();
         try (Connection con = getConnection();
@@ -90,7 +122,7 @@ public class UserDao {
         }
     }
 
-    // Vérifier si un utilisateur existe avec un mot de passe sécurisé
+    // Vérifier utilisateur existe avec un mot de passe
     public User getUser(String email, String password) {
         try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(SELECT_USER_BY_EMAIL)) {
@@ -98,17 +130,17 @@ public class UserDao {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     String hashedPassword = rs.getString("mot_de_passe");
-                    if (BCrypt.checkpw(password, hashedPassword)) { // Vérification sécurisée du mot de passe
+                    if (BCrypt.checkpw(password, hashedPassword)) {
                         User user = new User();
                         user.setId(rs.getInt("id"));
                         user.setEmail(rs.getString("email"));
-                        return user; // Ne renvoie PAS le mot de passe pour plus de sécurité
+                        return user;
                     }
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Erreur lors de la récupération de l'utilisateur", e);
         }
-        return null; // Retourne null si l'authentification échoue
+        return null;
     }
 }

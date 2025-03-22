@@ -74,7 +74,7 @@
 
 <div class="container">
   <h1>Edit Project</h1>
-  <form action="editProject" method="POST">
+  <form action="projects/edit" method="POST">
     <input type="hidden" name="id" value="${project.id}">
 
     <label for="name">Project Name:</label>

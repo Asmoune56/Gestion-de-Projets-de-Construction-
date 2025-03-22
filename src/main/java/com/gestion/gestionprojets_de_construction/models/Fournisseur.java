@@ -64,7 +64,6 @@ public class Fournisseur {
         this.adresse = adresse;
     }
 
-    // Méthode toString pour affichage
     @Override
     public String toString() {
         return "Fournisseur{" +
