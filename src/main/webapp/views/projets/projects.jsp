@@ -1,115 +1,61 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page session="true" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="true" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects List</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
+    <title>Liste des Projets</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script>
+        function confirmDelete(id) {
+            if (confirm("Voulez-vous vraiment supprimer ce projet ?")) {
+                document.getElementById("delete-form-" + id).submit();
+            }
         }
-        .container {
-            width: 80%;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .button:hover {
-            background-color: #45a049;
-        }
-        .action-buttons a {
-            margin: 5px;
-            color: white;
-            padding: 8px 16px;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .action-buttons a.edit {
-            background-color: #f39c12;
-        }
-        .action-buttons a.delete {
-            background-color: #e74c3c;
-        }
-        .action-buttons a:hover {
-            opacity: 0.8;
-        }
-    </style>
+    </script>
 </head>
 <body>
+<div class="container mt-4">
+    <h2>Liste des Projets</h2>
 
-<div class="container">
-    <h1>Project List</h1>
-    <a href="addProject.jsp" class="button">Add New Project</a>
-
-    <table>
+    <table class="table table-bordered">
         <thead>
         <tr>
             <th>ID</th>
-            <th>Name</th>
+            <th>Nom</th>
             <th>Description</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Actions</th>
+            <th>Date Début</th>
+            <th>Date Fin</th>
+            <th>Budget</th>
+            <th>Actions</th> <!-- Nouvelle colonne -->
         </tr>
         </thead>
         <tbody>
-        <%-- Loop through the projects list and display them --%>
-        <%
-            List<Project> projects = (List<Project>) request.getAttribute("projects");
-            for (Project project : projects) {
-        %>
-        <tr>
-            <td><%= project.getId() %></td>
-            <td><%= project.getName() %></td>
-            <td><%= project.getDescription() %></td>
-            <td><%= project.getStartDate() %></td>
-            <td><%= project.getEndDate() %></td>
-            <td class="action-buttons">
-                <a href="editProject.jsp?id=<%= project.getId() %>" class="edit">Edit</a>
-                <a href="deleteProject?id=<%= project.getId() %>" class="delete">Delete</a>
-            </td>
-        </tr>
-        <% } %>
+        <c:forEach var="projet" items="${projets}">
+            <tr>
+                <td>${projet.id}</td>
+                <td>${projet.nom}</td>
+                <td>${projet.description}</td>
+                <td>${projet.dateDebut}</td>
+                <td>${projet.dateFin}</td>
+                <td>${projet.budget} €</td>
+                <td>
+                    <a href="${pageContext.request.contextPath}/projects/edit-form${projet.id}" class="btn btn-warning btn-sm">Modifier</a>
+                    <!-- Formulaire de suppression caché -->
+                    <form id="delete-form-${projet.id}" action="${pageContext.request.contextPath}/projects/delete/${projet.id}" method="POST" style="display: inline;">
+                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete(${projet.id})">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        </c:forEach>
         </tbody>
     </table>
-</div>
 
+    <a href="${pageContext.request.contextPath}/projects/new-form" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Ajouter un projet
+    </a>
+</div>
 </body>
 </html>
-

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class FournisseurDao {
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
-    private final String jdbcUrl = "jdbc:mysql://localhost:3306/DBprojets";
+    private final String jdbcUrl = "jdbc:mysql://localhost:3306/dbprojets";
     private static final String USER = "root";
     private static final String PASS = "";
 
@@ -19,7 +19,6 @@ public class FournisseurDao {
     private static final String UPDATE_FOURNISSEUR = "UPDATE fournisseurs SET nom = ?, email = ?, telephone = ?, adresse = ? WHERE id = ?";
     private static final String DELETE_FOURNISSEUR = "DELETE FROM fournisseurs WHERE id = ?";
 
-    // Connexion à la base de données
     protected Connection getConnection() {
         Connection con = null;
         try {
@@ -49,7 +48,6 @@ public class FournisseurDao {
         }
     }
 
-    // Récupérer la liste des fournisseurs
     public List<Fournisseur> selectAllFournisseurs() {
         List<Fournisseur> fournisseurs = new ArrayList<>();
         try (Connection con = getConnection();

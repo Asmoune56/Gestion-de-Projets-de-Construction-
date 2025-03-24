@@ -1,14 +1,13 @@
 package com.gestion.gestionprojets_de_construction.daos;
 
 import com.gestion.gestionprojets_de_construction.models.Projet;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProjetDao {
  private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
- private final String jdbcUrl = "jdbc:mysql://localhost:3306/DBprojets";
+ private static final String JDBC_URL = "jdbc:mysql://localhost:3306/DBprojets";
  private static final String USER = "root";
  private static final String PASS = "";
 
@@ -19,18 +18,13 @@ public class ProjetDao {
  private static final String DELETE_PROJET = "DELETE FROM projets WHERE id = ?";
  private static final String UPDATE_PROJET = "UPDATE projets SET nom = ?, description = ?, dateDebut = ?, dateFin = ?, budget = ? WHERE id = ?";
 
- // Connexion à la base de données
  protected Connection getConnection() {
-  Connection con = null;
   try {
    Class.forName(DRIVER);
-   con = DriverManager.getConnection(jdbcUrl, USER, PASS);
-  } catch (ClassNotFoundException e) {
-   throw new RuntimeException("Driver non trouvé", e);
-  } catch (SQLException e) {
+   return DriverManager.getConnection(JDBC_URL, USER, PASS);
+  } catch (Exception e) {
    throw new RuntimeException("Erreur de connexion à la base de données", e);
   }
-  return con;
  }
 
  // Ajouter un projet
@@ -49,7 +43,7 @@ public class ProjetDao {
   }
  }
 
- // Récupérer tous les projets
+ // Récupérer la liste des projets
  public List<Projet> getProjets() {
   List<Projet> projets = new ArrayList<>();
   try (Connection con = getConnection();
@@ -57,40 +51,48 @@ public class ProjetDao {
        ResultSet rs = ps.executeQuery()) {
 
    while (rs.next()) {
-    Projet projet = new Projet();
-    projet.setId(rs.getInt("id"));
-    projet.setNom(rs.getString("nom"));
-    projet.setDescription(rs.getString("description"));
-    projet.setDateDebut(rs.getDate("dateDebut"));
-    projet.setDateFin(rs.getDate("dateFin"));
-    projet.setBudget(rs.getDouble("budget"));
+    Projet projet = new Projet(
+            rs.getInt("id"),
+            rs.getString("nom"),
+            rs.getString("description"),
+            rs.getDate("dateDebut"),
+            rs.getDate("dateFin"),
+            rs.getDouble("budget")
+    );
     projets.add(projet);
    }
   } catch (SQLException e) {
    throw new RuntimeException("Erreur lors de la récupération des projets", e);
   }
+
+  System.out.println("Projets récupérés : " + projets);
   return projets;
  }
 
- // Récupérer un projet par son ID
+ // Récupérer un projet par ID
  public Projet getProjetById(int id) {
   Projet projet = null;
-  try (Connection con = getConnection();
-       PreparedStatement ps = con.prepareStatement(SELECT_PROJET_BY_ID)) {
-   ps.setInt(1, id);
-   ResultSet rs = ps.executeQuery();
+  try (Connection conn = getConnection();
+       PreparedStatement stmt = conn.prepareStatement(SELECT_PROJET_BY_ID)) {
+
+   stmt.setInt(1, id);
+   ResultSet rs = stmt.executeQuery();
+
    if (rs.next()) {
-    projet = new Projet();
-    projet.setId(rs.getInt("id"));
-    projet.setNom(rs.getString("nom"));
-    projet.setDescription(rs.getString("description"));
-    projet.setDateDebut(rs.getDate("dateDebut"));
-    projet.setDateFin(rs.getDate("dateFin"));
-    projet.setBudget(rs.getDouble("budget"));
+    projet = new Projet(
+            rs.getInt("id"),
+            rs.getString("nom"),
+            rs.getString("description"),
+            rs.getDate("dateDebut"),
+            rs.getDate("dateFin"),
+            rs.getDouble("budget")
+    );
    }
   } catch (SQLException e) {
-   throw new RuntimeException("Erreur lors de la récupération du projet avec ID: " + id, e);
+   throw new RuntimeException("Erreur lors de la récupération du projet", e);
   }
+
+  System.out.println("Projet trouvé : " + projet);
   return projet;
  }
 
@@ -121,5 +123,32 @@ public class ProjetDao {
   } catch (SQLException e) {
    throw new RuntimeException("Erreur lors de la suppression du projet", e);
   }
+ }
+
+ // Récupérer les derniers projets
+ public List<Projet> getDerniersProjets() {
+  List<Projet> projets = new ArrayList<>();
+  String query = "SELECT * FROM projets ORDER BY dateDebut DESC LIMIT 5;";
+
+  try (Connection conn = getConnection();
+       PreparedStatement stmt = conn.prepareStatement(query);
+       ResultSet rs = stmt.executeQuery()) {
+
+   while (rs.next()) {
+    Projet projet = new Projet(
+            rs.getInt("id"),
+            rs.getString("nom"),
+            rs.getString("description"),
+            rs.getDate("dateDebut"),
+            rs.getDate("dateFin"),
+            rs.getDouble("budget")
+    );
+    projets.add(projet);
+   }
+  } catch (SQLException e) {
+   throw new RuntimeException("Erreur lors de la récupération des derniers projets", e);
+  }
+
+  return projets;
  }
 }

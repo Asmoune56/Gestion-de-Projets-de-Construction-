@@ -1,12 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: hp
-  Date: 20/03/2025
-  Time: 07:12
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="fr">
@@ -22,6 +14,24 @@
         }
         h1 {
             text-align: center;
+        }
+        .buttons-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            text-decoration: none;
+            color: white;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 5px;
+        }
+        .add-button a {
+            background-color: #4CAF50;
+        }
+        .dashboard-button a {
+            background-color: #007bff;
         }
         table {
             width: 100%;
@@ -42,26 +52,13 @@
             margin: 0 5px;
             text-decoration: none;
             padding: 5px;
-            background-color: #4CAF50;
             color: white;
-        }
-        .actions a.delete {
-            background-color: #f44336;
         }
         .actions a.edit {
             background-color: #008CBA;
         }
-        .add-button {
-            margin: 10px 0;
-            display: block;
-            text-align: center;
-        }
-        .add-button a {
-            padding: 10px 20px;
-            text-decoration: none;
-            background-color: #4CAF50;
-            color: white;
-            border-radius: 5px;
+        .actions a.delete {
+            background-color: #f44336;
         }
     </style>
 </head>
@@ -69,8 +66,11 @@
 
 <h1>Liste des Fournisseurs</h1>
 
-<div class="add-button">
-    <a href="add-form">Ajouter un fournisseur</a>
+<div class="buttons-container">
+
+    <div class="add-button">
+        <a href="${pageContext.request.contextPath}/fournisseur/add-form" class="button">Ajouter un fournisseur</a>
+    </div>
 </div>
 
 <table>
@@ -103,4 +103,3 @@
 
 </body>
 </html>
-

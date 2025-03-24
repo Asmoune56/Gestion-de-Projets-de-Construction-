@@ -1,5 +1,6 @@
 package com.gestion.gestionprojets_de_construction.daos;
 
+import com.gestion.gestionprojets_de_construction.models.Projet;
 import com.gestion.gestionprojets_de_construction.models.Tache;
 
 import java.sql.*;
@@ -18,8 +19,10 @@ public class TacheDao {
     private static final String SELECT_ALL_TACHE = "SELECT * FROM taches";
     private static final String UPDATE_TACHE = "UPDATE taches SET description = ?, dateDebut = ?, dateFin = ? WHERE id = ?";
     private static final String DELETE_TACHE = "DELETE FROM taches WHERE id = ?";
+    private static final String SELECT_TACHE_BY_ID = "SELECT * FROM taches WHERE id = ?";
 
-    // Get connection to the database
+
+    // connection
     protected Connection getConnection() {
         Connection con = null;
         try {
@@ -32,7 +35,7 @@ public class TacheDao {
         return con;
     }
 
-    // Insert a new Tache
+    // Insert  Tache
     public void insertTache(Tache tache) {
         try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(INSERT_TACHE)) {
@@ -46,7 +49,7 @@ public class TacheDao {
         }
     }
 
-    // Get all Taches
+    //  all Taches
     public List<Tache> getAllTaches() {
         List<Tache> taches = new ArrayList<>();
         try (Connection con = getConnection();
@@ -66,7 +69,7 @@ public class TacheDao {
         return taches;
     }
 
-    // Update an existing Tache
+    // Update  Tache
     public void updateTache(Tache tache) {
         try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(UPDATE_TACHE)) {
@@ -81,7 +84,7 @@ public class TacheDao {
         }
     }
 
-    // Delete a Tache
+    // Delete Tache
     public void deleteTache(int id) {
         try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(DELETE_TACHE)) {
@@ -92,4 +95,19 @@ public class TacheDao {
             throw new RuntimeException("Error deleting tache: " + e.getMessage());
         }
     }
+    public Tache getTacheById(int id) {
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement(SELECT_TACHE_BY_ID)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new Tache(rs.getString("description"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("id"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors de la récupération de la tâche : " + e.getMessage());
+        }
+        return null;
+    }
+
+
 }

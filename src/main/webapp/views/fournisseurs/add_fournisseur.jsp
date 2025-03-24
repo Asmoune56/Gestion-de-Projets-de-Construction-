@@ -1,98 +1,134 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: hp
-  Date: 20/03/2025
-  Time: 07:13
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajouter un Fournisseur</title>
+    <link rel="stylesheet" href="assets/styles.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f9;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-        h1 {
-            text-align: center;
-        }
-        form {
-            max-width: 500px;
-            margin: 0 auto;
-            background-color: #fff;
+
+        .container {
+            background: white;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
         }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .message {
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .error {
+            background-color: #ffdddd;
+            color: #d8000c;
+        }
+
+        .success {
+            background-color: #ddffdd;
+            color: #4F8A10;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
         label {
-            font-size: 14px;
-            margin-bottom: 8px;
-            display: block;
+            font-weight: bold;
+            margin-top: 10px;
         }
-        input[type="text"], input[type="email"], input[type="tel"] {
-            width: 100%;
+
+        input {
             padding: 10px;
-            margin-bottom: 12px;
+            margin-top: 5px;
             border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 5px;
+            font-size: 16px;
         }
-        input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-        .back-button {
+
+        button {
             margin-top: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .back-link {
             display: block;
             text-align: center;
-        }
-        .back-button a {
-            padding: 10px 20px;
+            margin-top: 15px;
+            color: #007bff;
             text-decoration: none;
-            background-color: #008CBA;
-            color: white;
-            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-<h1>Ajouter un Fournisseur</h1>
+<div class="container">
+    <h2>Ajouter un Fournisseur</h2>
 
-<form action="fournisseur" method="post">
-    <input type="hidden" name="action" value="create">
-    <label for="nom">Nom</label>
-    <input type="text" id="nom" name="nom" required>
+    <%-- Affichage des messages d'erreur/succès --%>
+    <% String error = (String) request.getAttribute("error");
+        String success = (String) session.getAttribute("success");
+        if (error != null) { %>
+    <p class="message error"><%= error %></p>
+    <% } %>
+    <% if (success != null) { %>
+    <p class="message success"><%= success %></p>
+    <% session.removeAttribute("success"); %>
+    <% } %>
 
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" required>
+    <form action="${pageContext.request.contextPath}/fournisseur/create" method="post">
+        <input type="hidden" name="action" value="create">
 
-    <label for="telephone">Téléphone</label>
-    <input type="tel" id="telephone" name="telephone" required>
+        <label for="nom">Nom :</label>
+        <input type="text" id="nom" name="nom" required>
 
-    <label for="adresse">Adresse</label>
-    <input type="text" id="adresse" name="adresse" required>
+        <label for="email">Email :</label>
+        <input type="email" id="email" name="email" required>
 
-    <input type="submit" value="Ajouter">
-</form>
+        <label for="telephone">Téléphone :</label>
+        <input type="text" id="telephone" name="telephone" required>
 
-<div class="back-button">
-    <a href="fournisseurs">Retour à la liste des fournisseurs</a>
+        <label for="adresse">Adresse :</label>
+        <input type="text" id="adresse" name="adresse" required>
+
+        <button type="submit">Ajouter</button>
+    </form>
+
+    <a class="back-link" href="${pageContext.request.contextPath}/fournisseur/list">Retour à la liste des fournisseurs</a>
 </div>
 
 </body>
 </html>
-

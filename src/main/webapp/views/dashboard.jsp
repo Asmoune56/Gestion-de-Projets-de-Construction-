@@ -1,3 +1,6 @@
+<%@ page import="com.gestion.gestionprojets_de_construction.models.Projet" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page session="true" %>
 <!DOCTYPE html>
@@ -117,10 +120,10 @@
 <div class="container">
     <div class="sidebar">
         <a href="#">🏠 Tableau de Bord</a>
-        <a href="projects.jsp">📁 Projets</a>
-        <a href="tache.jsp">✅ Tâches</a>
-        <a href="resources.jsp">🛠️ Ressources</a>
-        <a href="fournisseurs.jsp">🚚 Fournisseurs</a>
+        <a href="projects/list">📁 Projets</a>
+        <a href="tache/list">✅ Tâches</a>
+        <a href="resources/list">🛠️ Ressources</a>
+        <a href="fournisseur/list">🚚 Fournisseurs</a>
     </div>
 
     <div class="main-content">
@@ -133,6 +136,23 @@
         </div>
 
         <h3>📋 Derniers Projets</h3>
+
+        <%-- Afficher les erreurs, s'il y en a --%>
+        <%
+            String error = (String) request.getAttribute("error");
+            if (error != null) {
+        %>
+        <div style="color: red; text-align: center;"><%= error %></div>
+        <% } %>
+
+        <%-- Afficher un message s'il n'y a aucun projet --%>
+        <%
+            String message = (String) request.getAttribute("message");
+            if (message != null) {
+        %>
+        <div style="color: green; text-align: center;"><%= message %></div>
+        <% } %>
+
         <table>
             <thead>
             <tr>
@@ -143,20 +163,31 @@
             </tr>
             </thead>
             <tbody>
+            <%
+                List<Projet> derniersProjets = (List<Projet>) request.getAttribute("derniersProjets");
+                if (derniersProjets != null && !derniersProjets.isEmpty()) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    for (Projet projet : derniersProjets) {
+            %>
             <tr>
-                <td>Projet A</td>
-                <td>01/03/2025</td>
-                <td>100 000€</td>
-                <td><button class="btn">Détails</button></td>
+                <td><%= projet.getNom() %></td>
+                <td><%= dateFormat.format(projet.getDateDebut()) %></td>
+                <td><%= projet.getBudget() %> €</td>
+                <td>
+                    <a href="projet/details?id=<%= projet.getId() %>" class="btn">Détails</a>
+                </td>
             </tr>
+            <%
+                }
+            } else {
+            %>
             <tr>
-                <td>Projet B</td>
-                <td>10/03/2025</td>
-                <td>150 000€</td>
-                <td><button class="btn">Détails</button></td>
+                <td colspan="4" style="text-align: center;">Aucun projet récent</td>
             </tr>
+            <% } %>
             </tbody>
         </table>
+
     </div>
 </div>
 
