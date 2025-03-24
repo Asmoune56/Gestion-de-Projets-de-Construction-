@@ -30,8 +30,11 @@ public class FournisseurServlet extends HttpServlet {
             case "/delete":
                 deleteFournisseur(request, response);
                 break;
+            case "/add-form":
+                addFournisseurForm(request, response);
+                break;
             default:
-                response.sendRedirect("/fournisseur/list");
+                response.sendRedirect("fournisseur/list");
         }
     }
 
@@ -46,31 +49,48 @@ public class FournisseurServlet extends HttpServlet {
                 updateFournisseur(request, response);
                 break;
             default:
-                response.sendRedirect("/fournisseur/list");
+                response.sendRedirect("fournisseur/list");
         }
     }
 
     private void listFournisseurs(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Fournisseur> fournisseurs = fournisseurDao.selectAllFournisseurs();
         request.setAttribute("fournisseurs", fournisseurs);
-        request.getRequestDispatcher("/views/fournisseurs/list.jsp").forward(request, response);
+        request.getRequestDispatcher("/views/fournisseurs/fournisseurs.jsp").forward(request, response);
     }
 
     private void createFournisseur(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String nom = request.getParameter("nom");
-        String email = request.getParameter("email");
-        String telephone = request.getParameter("telephone");
-        String adresse = request.getParameter("adresse");
+        try {
+            String nom = request.getParameter("nom");
+            String email = request.getParameter("email");
+            String telephone = request.getParameter("telephone");
+            String adresse = request.getParameter("adresse");
 
-        Fournisseur newFournisseur = new Fournisseur();
-        newFournisseur.setNom(nom);
-        newFournisseur.setEmail(email);
-        newFournisseur.setTelephone(telephone);
-        newFournisseur.setAdresse(adresse);
+            if (nom == null || email == null || telephone == null || adresse == null) {
+                request.setAttribute("error", "Tous les champs sont obligatoires.");
+                request.getRequestDispatcher("/views/fournisseurs/add_fournisseur.jsp").forward(request, response);
+                return;
+            }
 
-        fournisseurDao.insertFournisseur(newFournisseur);
-        response.sendRedirect("/fournisseur/list");
+            Fournisseur newFournisseur = new Fournisseur();
+            newFournisseur.setNom(nom);
+            newFournisseur.setEmail(email);
+            newFournisseur.setTelephone(telephone);
+            newFournisseur.setAdresse(adresse);
+
+            fournisseurDao.insertFournisseur(newFournisseur);
+
+            request.getSession().setAttribute("success", "Fournisseur ajouté avec succès !");
+            response.sendRedirect(request.getContextPath() + "/fournisseur/list");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Une erreur est survenue lors de l'ajout du fournisseur.");
+            request.getRequestDispatcher("/views/fournisseurs/add_fournisseur.jsp").forward(request, response);
+        }
     }
+
+
 
     private void updateFournisseur(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
@@ -108,6 +128,9 @@ public class FournisseurServlet extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         fournisseurDao.deleteFournisseur(id);
         response.sendRedirect("/fournisseur/list");
+    }
+    private void addFournisseurForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("/views/fournisseurs/add_fournisseur.jsp").forward(req, resp);
     }
 }
 

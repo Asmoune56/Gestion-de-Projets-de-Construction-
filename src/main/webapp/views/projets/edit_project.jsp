@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: hp
-  Date: 20/03/2025
-  Time: 06:47
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -74,26 +67,28 @@
 
 <div class="container">
   <h1>Edit Project</h1>
-  <form action="projects/edit" method="POST">
-    <input type="hidden" name="id" value="${project.id}">
+
+  <form action="${pageContext.request.contextPath}/projects/edit" method="POST">
+    <input type="hidden" name="id" value="${not empty project ? project.id : ''}">
 
     <label for="name">Project Name:</label>
-    <input type="text" id="name" name="name" value="${project.name}" required>
+    <input type="text" id="name" name="name" value="${not empty project ? project.nom : ''}" required>
 
     <label for="description">Project Description:</label>
-    <textarea id="description" name="description" rows="4" required>${project.description}</textarea>
+    <textarea id="description" name="description" rows="4" required>${not empty project ? project.description : ''}</textarea>
 
     <label for="startDate">Start Date:</label>
-    <input type="date" id="startDate" name="startDate" value="${project.startDate}" required>
+    <input type="date" id="startDate" name="startDate" value="${not empty project ? project.dateDebut : ''}" required>
 
     <label for="endDate">End Date:</label>
-    <input type="date" id="endDate" name="endDate" value="${project.endDate}" required>
+    <input type="date" id="endDate" name="endDate" value="${not empty project ? project.dateFin : ''}" required>
 
     <input type="submit" value="Update Project">
   </form>
-  <a href="projects.jsp" class="back-button">Back to Project List</a>
+
+
+  <a href="${pageContext.request.contextPath}/projects/list" class="back-button">Back to Project List</a>
 </div>
 
 </body>
 </html>
-

@@ -74,7 +74,7 @@
 
 <div class="container">
     <h1>Add New Project</h1>
-    <form action="projects/new" method="POST">
+    <form action="${pageContext.request.contextPath}/projects/new" method="POST">
         <label for="name">Project Name:</label>
         <input type="text" id="name" name="name" required>
 
@@ -89,7 +89,7 @@
 
         <input type="submit" value="Add Project">
     </form>
-    <a href="projects.jsp" class="back-button">Back to Project List</a>
+    <a href="${pageContext.request.contextPath}/projects/list" class="back-button">Back to Project List</a>
 </div>
 
 </body>

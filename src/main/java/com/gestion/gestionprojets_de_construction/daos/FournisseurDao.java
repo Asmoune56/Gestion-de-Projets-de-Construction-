@@ -9,7 +9,7 @@ import java.util.List;
 
 public class FournisseurDao {
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
-    private final String jdbcUrl = "jdbc:mysql://localhost:3306/DBprojets";
+    private final String jdbcUrl = "jdbc:mysql://localhost:3306/dbprojets";
     private static final String USER = "root";
     private static final String PASS = "";
 
@@ -48,7 +48,6 @@ public class FournisseurDao {
         }
     }
 
-    //  liste des fournisseurs
     public List<Fournisseur> selectAllFournisseurs() {
         List<Fournisseur> fournisseurs = new ArrayList<>();
         try (Connection con = getConnection();

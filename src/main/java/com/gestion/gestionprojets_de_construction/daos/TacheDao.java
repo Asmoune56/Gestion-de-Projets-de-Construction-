@@ -1,5 +1,6 @@
 package com.gestion.gestionprojets_de_construction.daos;
 
+import com.gestion.gestionprojets_de_construction.models.Projet;
 import com.gestion.gestionprojets_de_construction.models.Tache;
 
 import java.sql.*;
@@ -107,4 +108,6 @@ public class TacheDao {
         }
         return null;
     }
+
+
 }
