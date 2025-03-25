@@ -1,58 +1,79 @@
 package com.gestion.gestionprojets_de_construction.models;
 
+
+
 import java.sql.Date;
 
 public class Projet {
-    private int id;
+    private int id_PR;
     private String nom;
     private String description;
-    private Date dateDebut;  // Change to java.sql.Date
-    private Date dateFin;    // Change to java.sql.Date
-    private double budget;
+    private Date date_debut;
+    private Date date_fin;
+    private Double budget;
 
-    // Constructeur principal
-    public Projet(int id, String nom, String description, Date dateDebut, Date dateFin, double budget) {
-        this.id = id;
+    public Projet(int id_PR, String nom, String description, Date date_debut, Date date_fin, Double budget) {
+        this.id_PR = id_PR;
         this.nom = nom;
         this.description = description;
-        setDateDebut(dateDebut);
-        setDateFin(dateFin);
-        setBudget(budget);
+        this.date_debut = date_debut;
+        this.date_fin = date_fin;
+        this.budget = budget;
     }
 
-    // Constructeur sans ID (utilisé lors de la création d'un nouveau projet)
-    public Projet(String nom, String description, Date dateDebut, Date dateFin, double budget) {
-        this(0, nom, description, dateDebut, dateFin, budget); // Appelle le constructeur principal
+    public Projet(String nom, String description, Date date_debut, Date date_fin, Double budget) {
+        this.nom = nom;
+        this.description = description;
+        this.date_debut = date_debut;
+        this.date_fin = date_fin;
+        this.budget = budget;
     }
 
-    // Getters et setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-
-    public String getNom() { return nom; }
-    public void setNom(String nom) { this.nom = nom; }
-
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-
-    public Date getDateDebut() { return dateDebut; }
-    public void setDateDebut(Date dateDebut) {
-        this.dateDebut = dateDebut;
+    public int getId_PR() {
+        return id_PR;
     }
 
-    public Date getDateFin() { return dateFin; }
-    public void setDateFin(Date dateFin) {
-        if (dateDebut != null && dateFin != null && dateFin.before(dateDebut)) {
-            throw new IllegalArgumentException("La date de fin doit être après la date de début !");
-        }
-        this.dateFin = dateFin;
+    public void setId_PR(int id_PR) {
+        this.id_PR = id_PR;
     }
 
-    public double getBudget() { return budget; }
-    public void setBudget(double budget) {
-        if (budget < 0) {
-            throw new IllegalArgumentException("Le budget ne peut pas être négatif !");
-        }
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getDate_debut() {
+        return date_debut;
+    }
+
+    public void setDate_debut(Date date_debut) {
+        this.date_debut = date_debut;
+    }
+
+    public Date getDate_fin() {
+        return date_fin;
+    }
+
+    public void setDate_fin(Date date_fin) {
+        this.date_fin = date_fin;
+    }
+
+    public Double getBudget() {
+        return budget;
+    }
+
+    public void setBudget(Double budget) {
         this.budget = budget;
     }
 }

@@ -1,36 +1,50 @@
 package com.gestion.gestionprojets_de_construction.models;
 
+
+
 public class Ressource {
-    private int id;
+    private int id_RESS;
     private String nom;
-    private String type;
-    private int quantite;
-    private int fournisseurId;
+    private String types;
+    private Double quantite;
+    private String fournisseur;
+    private int quantityUsed;
 
     public Ressource() {
+
     }
 
-    public Ressource(String nom, String type, int quantite, int fournisseurId) {
+    public Ressource(int id_RESS, String nom, String types, Double quantite, String fournisseur) {
+        this.id_RESS = id_RESS;
         this.nom = nom;
-        this.type = type;
+        this.types = types;
         this.quantite = quantite;
-        this.fournisseurId = fournisseurId;
+        this.fournisseur = fournisseur;
+
     }
 
-    public Ressource(int id, String nom, String type, int quantite, int fournisseurId) {
-        this.id = id;
+    public Ressource(String nom, String types, Double quantite, String fournisseur, int quantityUsed) {
         this.nom = nom;
-        this.type = type;
+        this.types = types;
         this.quantite = quantite;
-        this.fournisseurId = fournisseurId;
+        this.fournisseur = fournisseur;
+        this.quantityUsed = quantityUsed;
     }
 
-    public int getId() {
-        return id;
+    public Ressource(String nom, String types, Double quantite, String fournisseur) {
+        this.nom = nom;
+        this.types = types;
+        this.quantite = quantite;
+        this.fournisseur = fournisseur;
+
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public int getId_RESS() {
+        return id_RESS;
+    }
+
+    public void setId_RESS(int id_RESS) {
+        this.id_RESS = id_RESS;
     }
 
     public String getNom() {
@@ -41,28 +55,35 @@ public class Ressource {
         this.nom = nom;
     }
 
-    public String getType() {
-        return type;
+    public String getTypes() {
+        return types;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTypes(String types) {
+        this.types = types;
     }
 
-    public int getQuantite() {
+    public Double getQuantite() {
         return quantite;
     }
 
-    public void setQuantite(int quantite) {
+    public void setQuantite(Double quantite) {
         this.quantite = quantite;
     }
 
-    public int getFournisseurId() {
-        return fournisseurId;
+    public String getFournisseur() {
+        return fournisseur;
     }
 
-    public void setFournisseurId(int fournisseurId) {
-        this.fournisseurId = fournisseurId;
+    public void setFournisseur(String fournisseur) {
+        this.fournisseur = fournisseur;
+    }
+
+    public int getQuantityUsed() {
+        return quantityUsed;
+    }
+
+    public void setQuantityUsed(int quantityUsed) {
+        this.quantityUsed = quantityUsed;
     }
 }
-

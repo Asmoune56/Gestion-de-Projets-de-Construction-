@@ -1,41 +1,55 @@
 package com.gestion.gestionprojets_de_construction.models;
 
-import java.sql.Date;
+
+
+import java.util.Date;
+import java.util.List;
 
 public class Tache {
-    private int id;
+    private int id_TA;
+    private int projet_id;
     private String description;
-    private Date dateDebut;
-    private Date dateFin;
-    private int projetId;
+    private Date date_debut;
+    private Date date_fin;
 
-    public Tache() {
-    }
 
-    public Tache(String description, Date dateDebut, Date dateFin) {
-    }
-
-    public Tache(String description, Date dateDebut, Date dateFin, int projetId) {
+    public Tache(int id_TA, int projet_id, String description, Date date_debut, Date date_fin) {
+        this.id_TA = id_TA;
+        this.projet_id = projet_id;
         this.description = description;
-        this.dateDebut = dateDebut;
-        this.dateFin = dateFin;
-        this.projetId = projetId;
+        this.date_debut = date_debut;
+        this.date_fin = date_fin;
     }
 
-    public Tache(int id, String description, Date dateDebut, Date dateFin, int projetId) {
-        this.id = id;
+    public Tache(int projet_id, String description, Date date_debut, Date date_fin) {
+        this.projet_id = projet_id;
         this.description = description;
-        this.dateDebut = dateDebut;
-        this.dateFin = dateFin;
-        this.projetId = projetId;
+        this.date_debut = date_debut;
+        this.date_fin = date_fin;
     }
 
-    public int getId() {
-        return id;
+    public Date getDate_debut() {
+        return date_debut;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setDate_debut(Date date_debut) {
+        this.date_debut = date_debut;
+    }
+
+    public int getId_TA() {
+        return id_TA;
+    }
+
+    public void setId_TA(int id_TA) {
+        this.id_TA = id_TA;
+    }
+
+    public int getProjet_id() {
+        return projet_id;
+    }
+
+    public void setProjet_id(int projet_id) {
+        this.projet_id = projet_id;
     }
 
     public String getDescription() {
@@ -46,28 +60,13 @@ public class Tache {
         this.description = description;
     }
 
-    public Date getDateDebut() {
-        return dateDebut;
+    public Date getDate_fin() {
+        return date_fin;
     }
 
-    public void setDateDebut(Date dateDebut) {
-        this.dateDebut = dateDebut;
+    public void setDate_fin(Date date_fin) {
+        this.date_fin = date_fin;
     }
 
-    public Date getDateFin() {
-        return dateFin;
-    }
-
-    public void setDateFin(Date dateFin) {
-        this.dateFin = dateFin;
-    }
-
-    public int getProjetId() {
-        return projetId;
-    }
-
-    public void setProjetId(int projetId) {
-        this.projetId = projetId;
-    }
 }
 

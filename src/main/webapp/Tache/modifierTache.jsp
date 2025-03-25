@@ -1,9 +1,12 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ConstructionXpert - Gestion de Projets</title>
+    <title>Modifier une Tâche | ConstructionXpert</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -24,15 +27,13 @@
         }
 
         body {
-            background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
-            url('https://png.pngtree.com/thumb_back/fh260/background/20231221/pngtree-silhouettes-of-engineers-and-construction-team-working-on-site-on-blurred-photo-image_15555438.png') no-repeat center center/cover;
-            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             color: var(--dark-color);
         }
 
         /* Navbar Styles */
         .navbar {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             padding: 15px 30px;
@@ -97,7 +98,7 @@
         .submenu {
             display: none;
             position: absolute;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             list-style: none;
@@ -150,88 +151,149 @@
             font-size: 15px;
         }
 
-        /* Hero Section */
+        /* Main Content */
         header {
             width: 100%;
-            height: 100vh;
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('construction-bg.jpg') no-repeat center center/cover;
+            min-height: 100vh;
             display: flex;
+            justify-content: center;
             align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: var(--light-color);
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+            url('https://www.ie.edu/insights/wp-content/uploads/2020/11/VanSchendel-Construction.jpg') no-repeat center center/cover;
+            padding: 100px 20px 20px;
         }
 
-        .text {
+        .container {
             max-width: 800px;
-            padding: 0 20px;
-        }
-
-        .text span {
-            letter-spacing: 3px;
-            font-size: 18px;
-            font-weight: 300;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            display: block;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .text h1 {
-            font-size: 3.5rem;
-            margin-bottom: 30px;
-            font-weight: 700;
-            line-height: 1.2;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .action-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 40px;
-            flex-wrap: wrap;
-        }
-
-        .action-btn {
-            text-decoration: none;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            padding: 12px 30px;
-            border-radius: 50px;
-            color: white;
-            font-weight: 500;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            min-width: 160px;
-        }
-
-        .action-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .action-btn:nth-child(1) {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            border: none;
-        }
-
-        .action-btn:nth-child(1):hover {
-            background: linear-gradient(135deg, #3a56e8, #2f0b9e);
-        }
-
-        /* Glassmorphism Effect */
-        .glass-card {
-            background: var(--glass-color);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 15px;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            width: 100%;
             padding: 40px;
             margin: 20px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            font-size: 28px;
+            font-weight: 600;
+            text-align: center;
+            color: white;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .input-box {
+            width: calc(50% - 10px);
+            margin-bottom: 20px;
+        }
+
+        .input-box label {
+            display: block;
+            color: white;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .input-box input,
+        .input-box select {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            outline: none;
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .input-box input:focus,
+        .input-box select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .input-box input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .button-container {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .input-box {
+                width: 100%;
+            }
+
+            .container {
+                padding: 30px 20px;
+            }
+
+            .button-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -272,16 +334,47 @@
 </nav>
 
 <header>
-    <section class="text glass-card">
-        <span>Bienvenue sur</span>
-        <h1>Votre plateforme de gestion de construction</h1>
-        <div class="action-buttons">
-            <a href="projet?action=afficher" class="action-btn">Projets</a>
-            <a href="tache?action=afficher" class="action-btn">Tâches</a>
-            <a href="ressource?action=afficher" class="action-btn">Ressources</a>
-        </div>
-    </section>
-</header>
+    <div class="container">
+        <h2><i class="fas fa-edit"></i> Modifier une Tâche</h2>
+        <form action="tache?action=modifier" method="post">
+            <div class="content">
+                <input type="hidden" name="id_TA" value="${tache.id_TA}">
 
+                <div class="input-box">
+                    <label for="projet_id"><i class="fas fa-project-diagram"></i> Projet:</label>
+                    <select name="projet_id" id="projet_id">
+                        <c:forEach items="${projets}" var="projet">
+                            <option value="${projet.id_PR}" ${projet.id_PR == tache.projet_id ? 'selected' : ''}>${projet.nom}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+
+                <div class="input-box">
+                    <label for="description"><i class="fas fa-align-left"></i> Description:</label>
+                    <input type="text" id="description" name="description" value="${tache.description}" required>
+                </div>
+
+                <div class="input-box">
+                    <label for="date_debut"><i class="fas fa-calendar-alt"></i> Date de Début:</label>
+                    <input type="date" id="date_debut" name="date_debut" value="${tache.date_debut}" required>
+                </div>
+
+                <div class="input-box">
+                    <label for="date_fin"><i class="fas fa-calendar-check"></i> Date de Fin:</label>
+                    <input type="date" id="date_fin" name="date_fin" value="${tache.date_fin}" required>
+                </div>
+
+                <div class="button-container">
+                    <a href="tache?action=afficher" class="btn btn-back">
+                        <i class="fas fa-arrow-left"></i> Retour
+                    </a>
+                    <button type="submit" class="btn btn-submit">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</header>
 </body>
 </html>

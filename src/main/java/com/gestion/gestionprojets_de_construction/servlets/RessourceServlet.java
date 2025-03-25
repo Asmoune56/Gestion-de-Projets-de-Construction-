@@ -1,146 +1,117 @@
 package com.gestion.gestionprojets_de_construction.servlets;
 
-import com.gestion.gestionprojets_de_construction.daos.RessourceDao;
+
+
+
+
+import com.gestion.gestionprojets_de_construction.daos.RessourceDAO;
+import com.gestion.gestionprojets_de_construction.daos.TacheDAO;
+import com.gestion.gestionprojets_de_construction.daos.TacheRessourceDAO;
 import com.gestion.gestionprojets_de_construction.models.Ressource;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet("/resources/*")
+@WebServlet("/ressource")
 public class RessourceServlet extends HttpServlet {
-    private final RessourceDao ressourceDao = new RessourceDao();
+    private RessourceDAO ressourceDAO;
+    private TacheDAO tacheDAO;
+    private TacheRessourceDAO tacheRessourceDAO;
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doGet(req, resp);
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String action = req.getPathInfo();
-        System.out.println("Action: " + action);
-
-        switch (action) {
-            case "/new":
-                createRessource(req, resp);
-                break;
-            case "/new-form":
-                addRessourceForm(req, resp);
-                break;
-            case "/edit":
-                updateRessource(req, resp);
-                break;
-            case "/edit-form":
-                updateRessourceForm(req, resp);
-                break;
-            case "/delete":
-                deleteRessource(req, resp);
-                break;
-            case "/list":
-                listRessources(req, resp);
-                break;
-            default:
-                System.out.println("Unknown action: " + action);
-                resp.sendRedirect(req.getContextPath() + "/resources/list");
+    public void init() throws ServletException {
+        try {
+            tacheRessourceDAO = new TacheRessourceDAO();
+            ressourceDAO = new RessourceDAO();
+            tacheDAO = new TacheDAO();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException("Error initializing RessourceDAO", e);
         }
     }
 
-    private void createRessource(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String nom = req.getParameter("nom");
-        String type = req.getParameter("type");
-        int quantite = Integer.parseInt(req.getParameter("quantite"));
-        HttpSession session = req.getSession();
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doGet(request, response);
+    }
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+        if (action == null) {
 
-        Ressource newRessource = new Ressource();
-        newRessource.setNom(nom);
-        newRessource.setType(type);
-        newRessource.setQuantite(quantite);
-
-        try {
-            ressourceDao.insertRessource(newRessource);
-            session.setAttribute("message", "Ressource ajoutée avec succès !");
-            session.setAttribute("messageType", "success");
-        } catch (Exception e) {
-            session.setAttribute("error", e.getMessage());
-            session.setAttribute("messageType", "danger");
-            e.printStackTrace();
         }
+        try{
+            switch (action) {
+                case "new":
+                    afficherForm(request,response);
+                    break;
+                case "ajouter":
+                    ajouterRessource(request,response);
+                    break;
+                case "modifier":
+                    modifierRessource(request,response);
+                    break;
+                case "supprimer":
+                    supprimerRessource(request,response);
+                    break;
+                case "afficher":
+                    afficherRessource(request,response);
+                    break;
+                case "TrouverRessourceParid":
+                    afficherRessourceParid(request,response);
+                    break;
+                default:
+                    break;
 
-        resp.sendRedirect(req.getContextPath() + "/resources/list");
-    }
-
-    private void addRessourceForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/views/ressources/ajouter_ressource.jsp").forward(req, resp);
-    }
-
-    private void updateRessource(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
-        String nom = req.getParameter("nom");
-        String type = req.getParameter("type");
-        int quantite = Integer.parseInt(req.getParameter("quantite"));
-        HttpSession session = req.getSession();
-
-        try {
-            Ressource ressource = ressourceDao.getRessourceById(id);
-            if (ressource != null) {
-                ressource.setNom(nom);
-                ressource.setType(type);
-                ressource.setQuantite(quantite);
-                ressourceDao.updateRessource(ressource);
-                session.setAttribute("message", "Ressource mise à jour avec succès !");
-                session.setAttribute("messageType", "success");
-            } else {
-                session.setAttribute("error", "Ressource introuvable !");
-                session.setAttribute("messageType", "danger");
             }
         } catch (Exception e) {
-            session.setAttribute("error", e.getMessage());
-            session.setAttribute("messageType", "danger");
-            e.printStackTrace();
+            throw new ServletException("Erreur dans la gestion des ressource", e);
         }
-
-        resp.sendRedirect(req.getContextPath() + "/resources/list");
     }
 
-    private void updateRessourceForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
-        Ressource ressource = ressourceDao.getRessourceById(id);
-        req.setAttribute("ressource", ressource);
-        req.getRequestDispatcher("/WEB-INF/views/ressources/modifier_ressource.jsp").forward(req, resp);
+    private void afficherForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher("/Ressource/ajouteRessource.jsp").forward(request,response);
     }
-
-    private void deleteRessource(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
-        HttpSession session = req.getSession();
-
-        try {
-            ressourceDao.deleteRessource(id);
-            session.setAttribute("message", "Ressource supprimée avec succès !");
-            session.setAttribute("messageType", "success");
-        } catch (Exception e) {
-            session.setAttribute("error", e.getMessage());
-            session.setAttribute("messageType", "danger");
-            e.printStackTrace();
-        }
-
-        resp.sendRedirect(req.getContextPath() + "/resources/list");
+    private void ajouterRessource(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+        String nom = request.getParameter("nom");
+        String Types   = request.getParameter("type");
+        Double quantite = Double.valueOf(request.getParameter("quantite"));
+        String fournisseur = request.getParameter("fournisseur");
+        Ressource ressource = new Ressource(nom,Types,quantite,fournisseur);
+        ressourceDAO.ajouterRessource(ressource);
+        response.sendRedirect("ressource?action=afficher");
     }
+    private void modifierRessource(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+        int id_RESS = Integer.parseInt(request.getParameter("id_RESS"));
+        String nom = request.getParameter("nom");
+        String Types   = request.getParameter("types");
+        Double quantite = Double.valueOf(request.getParameter("quantite"));
+        String fournisseur = request.getParameter("fournisseur");
+        Ressource ressource = new Ressource(id_RESS,nom,Types,quantite,fournisseur);
+        ressourceDAO.modifierRessource(ressource);
+        response.sendRedirect("ressource?action=afficher");
+    }
+    private void supprimerRessource(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+        int id_RESS = Integer.parseInt(request.getParameter("id_RESS"));
+        ressourceDAO.supprimerRessource(id_RESS);
+        response.sendRedirect("ressource?action=afficher");
+    }
+    private void afficherRessource(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+        List<Ressource> ressourceList = ressourceDAO.afficherRessource();
 
-    private void listRessources(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Ressource> ressources = ressourceDao.selectAllRessource();
-
-        if (ressources == null) {
-            ressources = new ArrayList<>();
-        }
-
-        req.setAttribute("ressources", ressources);
-        req.getRequestDispatcher("/views/ressources/resources.jsp").forward(req, resp);
+        System.out.println(ressourceList);
+        request.setAttribute("ressourceList", ressourceList);
+        request.getRequestDispatcher("/Ressource/afficherRessource.jsp").forward(request, response);
+    }
+    private void afficherRessourceParid(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+        int id_RESS = Integer.parseInt(request.getParameter("id_RESS"));
+        Ressource ressource = ressourceDAO.afficherRessourceParid(id_RESS);
+        request.setAttribute("ressource", ressource);
+        request.getRequestDispatcher("/Ressource/modifierRessource.jsp").forward(request,response);
     }
 }
+
